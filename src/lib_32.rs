@@ -34,7 +34,7 @@ pub fn keplerian_elements_from_vsop87(a: f32,
                                       -> (f32, f32, f32, f32, f32, f32) {
 
     let e = (h * h + k * k).sqrt();
-    let i = (1_f64 - 2_f64 * (p * p + q * q)).acos();
+    let i = (1_f32 - 2_f32 * (p * p + q * q)).acos();
     let lan = (p / q).atan();
     let lper = (h / e).asin();
 

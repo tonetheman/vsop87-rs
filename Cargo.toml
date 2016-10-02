@@ -13,6 +13,6 @@ VSOP87A, VSOP87B, VSOP87C, VSOP87D and VSOP87E.
 keywords = ["vsop87", "simulation", "astrophysics", "astronomy"]
 
 [features]
-default=[ ]
+default=[ "f64" ]
 f32= []
 f64 = []

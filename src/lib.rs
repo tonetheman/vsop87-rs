@@ -80,6 +80,7 @@ fn calculate_var(t: f64, var: &[(f64, f64, f64)]) -> f64 {
 /// assert!(lper >  1.35183 && lper < 1.35185);
 /// assert!(l > 4.40259 && l < 4.40261);
 /// ```
+#[cfg(feature = "f64")]
 pub fn keplerian_elements_from_vsop87(a: f64,
                                       l: f64,
                                       k: f64,
@@ -95,6 +96,59 @@ pub fn keplerian_elements_from_vsop87(a: f64,
 
     (a, e, i, lan, lper, l)
 }
+
+/// Calculates the keplerian orbital elements from VSOP87
+///
+/// This function calculates the keplerian orbital elements from the VSOP87 solution (heliocentric
+/// ecliptic orbital elements for the equinox J2000.0). The parameters needed are the 6 variables
+/// returned by the VSOP87 function for a given planet. It returns, in order, a tuple with the
+/// keplerian orbital elements of the planet:
+///
+/// - Eccentricity (*e*)
+/// - Semimajor axis (*a*), in *AU*
+/// - Inclination (*i*), in radians
+/// - Longitude of the ascending node (*Ω*), in radians
+/// - Longitude of the periapsis (*ϖ*), in radians
+/// - Mean longitude (*L₀*), in radians
+///
+/// # Examples
+///
+/// ```
+/// let (a, l, k, h, q, p) = vsop87::mercury(2451545.0);
+/// #
+/// # assert!(a > 0.3870982121 && a < 0.3870982123);
+/// # assert!(l > 4.4026057778 && l < 4.4026057780);
+/// # assert!(k > 0.0446647517 && k < 0.0446647519);
+/// # assert!(h > 0.2007208957 && h < 0.2007208959);
+/// # assert!(q > 0.0406161540 && q < 0.0406161542);
+/// # assert!(p > 0.04563512 && p < 0.04563588);
+/// #
+/// let (a, e, i, lan, lper, l) = vsop87::keplerian_elements_from_vsop87(a, l, k, h, q, p);
+///
+/// assert!(a > 0.387097 && a < 0.387099);
+/// assert!(e > 0.205629 && e < 0.205631);
+/// assert!(i > 0.122260 && i < 0.122261);
+/// assert!(lan > 0.843525 && lan < 0.843527);
+/// assert!(lper >  1.35183 && lper < 1.35185);
+/// assert!(l > 4.40259 && l < 4.40261);
+/// ```
+#[cfg(feature = "f32")]
+pub fn keplerian_elements_from_vsop87(a: f32,
+                                      l: f32,
+                                      k: f32,
+                                      h: f32,
+                                      q: f32,
+                                      p: f32)
+                                      -> (f32, f32, f32, f32, f32, f32) {
+
+    let e = (h * h + k * k).sqrt();
+    let i = (1_f32 - 2_f32 * (p * p + q * q)).acos();
+    let lan = (p / q).atan();
+    let lper = (h / e).asin();
+
+    (a, e, i, lan, lper, l)
+}
+
 
 /// Calculates VSOP87 solution for Mercury
 ///
